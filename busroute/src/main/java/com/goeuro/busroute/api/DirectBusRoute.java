@@ -2,6 +2,10 @@ package com.goeuro.busroute.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+/**
+ * This class represents the JSON response for the RestFul micro service
+ *
+ */
 public class DirectBusRoute {
 
 	@JsonProperty(value = "dep_sid")
@@ -20,11 +24,9 @@ public class DirectBusRoute {
 		this.directBusRoute = directBusRoute;
 	}
 
-	public boolean isDirectBusRoute() {
-		return directBusRoute;
+	@Override
+	public String toString() {
+		return "DirectBusRoute [depId=" + depId + ", arrId=" + arrId + ", directBusRoute=" + directBusRoute + "]";
 	}
 
-	public void setDirectBusRoute(boolean directBusRoute) {
-		this.directBusRoute = directBusRoute;
-	}
 }

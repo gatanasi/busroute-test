@@ -3,6 +3,10 @@ package com.goeuro.busroute.model;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * This class represents a route of a bus
+ *
+ */
 public class BusRoute {
 
 	private int busId;
@@ -38,4 +42,38 @@ public class BusRoute {
 	public List<Integer> getStations() {
 		return stations;
 	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + busId;
+		result = prime * result + ((stations == null) ? 0 : stations.hashCode());
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		BusRoute other = (BusRoute) obj;
+		if (busId != other.busId)
+			return false;
+		if (stations == null) {
+			if (other.stations != null)
+				return false;
+		} else if (!stations.equals(other.stations))
+			return false;
+		return true;
+	}
+
+	@Override
+	public String toString() {
+		return "BusRoute [busId=" + busId + ", stations=" + stations + "]";
+	}
+
 }

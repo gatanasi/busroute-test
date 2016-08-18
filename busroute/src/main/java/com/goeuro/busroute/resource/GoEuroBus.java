@@ -1,6 +1,7 @@
 package com.goeuro.busroute.resource;
 
 import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -20,39 +21,58 @@ import com.goeuro.busroute.api.DirectBusRoute;
 import com.goeuro.busroute.model.BusRoute;
 
 /**
- * Root resource (exposed at "goeurobus" path)
+ * Service to manage requests for path /goeurobus
  */
 @Path("goeurobus")
 public class GoEuroBus {
 
 	private static final Logger logger = LoggerFactory.getLogger(GoEuroBus.class);
 
-	public static final String DATA_FILE_NAME = "/routesDataFileExample.txt";
+	private static List<BusRoute> busRoutesList;
 
-	private static List<BusRoute> busRoutesList = getBusRoutes();
+	public static void createWithBusRoutesPath(String dataFilePath) {
+		busRoutesList = getBusRoutes(dataFilePath);
+	}
 
 	/**
+	 * Examines if the given departure and arrival stations are directly routed
+	 * by bus.
+	 * 
 	 * Method handling HTTP GET requests. The returned object will be sent to
 	 * the client as "json" media type.
 	 *
-	 * @return String that will be returned as a JSON object response.
+	 * @return DirectBusRoute that will be returned as a JSON object response.
 	 */
 	@Path("direct/{dep_sid}/{arr_sid}")
 	@GET
 	@Produces(MediaType.APPLICATION_JSON)
 	public DirectBusRoute getDirectRoute(@PathParam("dep_sid") int depId, @PathParam("arr_sid") int arrId) {
-		DirectBusRoute reqBusRoute = new DirectBusRoute(depId, arrId, true);
+
+		DirectBusRoute reqBusRoute = null;
+
+		for (BusRoute busRoute : busRoutesList) {
+			List<Integer> stations = busRoute.getStations();
+			if (stations.contains(depId) && stations.contains(arrId)) {
+				reqBusRoute = new DirectBusRoute(depId, arrId, true);
+				break;
+			}
+		}
+
+		if (reqBusRoute == null) {
+			reqBusRoute = new DirectBusRoute(depId, arrId, false);
+		}
+
 		logger.info(reqBusRoute.toString());
 		return reqBusRoute;
 	}
 
-	private static List<BusRoute> getBusRoutes() {
+	private static List<BusRoute> getBusRoutes(String routesDataFile) {
 		InputStream stream = null;
 		BufferedReader reader = null;
 		List<BusRoute> busRoutes = new ArrayList<BusRoute>();
 
 		try {
-			stream = GoEuroBus.class.getResourceAsStream(DATA_FILE_NAME);
+			stream = new FileInputStream(routesDataFile);
 			reader = new BufferedReader(new InputStreamReader(stream));
 			int numberOfRoutes = Integer.parseInt(reader.readLine());
 			for (int i = 0; i < numberOfRoutes; i++) {
@@ -76,4 +96,5 @@ public class GoEuroBus {
 		}
 		return busRoutes;
 	}
+
 }
