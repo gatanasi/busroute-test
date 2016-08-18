@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 
 import org.junit.Test;
 
+import com.goeuro.busroute.model.BusRoute;
+
 public class BusRouteTest {
 
 	@Test

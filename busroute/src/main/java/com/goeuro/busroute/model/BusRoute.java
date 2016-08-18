@@ -1,4 +1,4 @@
-package com.goeuro.busroute;
+package com.goeuro.busroute.model;
 
 import java.util.ArrayList;
 import java.util.List;

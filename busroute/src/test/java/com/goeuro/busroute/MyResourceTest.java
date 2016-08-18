@@ -29,9 +29,10 @@ public class MyResourceTest {
 	}
 
 	@Test
-	public void testGetIt() {
+	public void testGetDirectRoute() {
 		String responseMsg = target.path("goeurobus/direct/10/3").request().get(String.class);
 		System.out.println(responseMsg);
 		// assertEquals("Got it!", responseMsg);
 	}
+
 }
